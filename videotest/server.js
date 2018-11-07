@@ -1,13 +1,14 @@
 const io = require('socket.io')();
 console.log('server started')
 io.on('connection', (client) => {
-    let room = ''; 
 
-    client.on('message', message => client.broadcast.to(room).emit('message', message));
+    client.on('message', clientData => 
+        client.to(clientData.roomId).emit('message', clientData.messageContent)
+    );
 
-    client.on('leave', () => {
-        client.leave(room)
-        client.broadcast.to(room).emit('hangup')
+    client.on('leave', clientData => {
+        client.leave(clientData.roomId)
+        client.broadcast.to(clientData.roomId).emit('hangup')
     });
 
     client.on('find', clientData => {
@@ -19,8 +20,7 @@ io.on('connection', (client) => {
 });
 
 function requestRoom(clientData) {
-    console.log(clientData);
-    return clientData;
+    return 'testRoom';
 }
 
 const port = 3001;

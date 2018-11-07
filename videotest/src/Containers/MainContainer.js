@@ -1,42 +1,52 @@
 import React, { Component } from 'react';
-import {find, message} from '../Api';
+import {find, sendMessage} from '../Api';
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.requestState = this.requestState.bind(this);
+        this.requestRoom = this.requestRoom.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
         this.state = {
-            clientData: null,
-            messageContent : null,
+            roomId : null,
+            messageContent : '',
             response: null
         };
     }
 
-    requestState(){
-        this.setState({clientData : this.state.messageContent},
-            function () {
-                console.log(this.state.clientData);
-                find(
-                    this.state.clientData, 
-                    (roomId) => this.setState({response : roomId})
-                )
-            }
+    requestRoom(){
+        find(
+            this.state, 
+            (room) => this.setState({roomId : room})
         );
     }
 
     updateMessageContent(evt) {
         this.setState({
             messageContent: evt.target.value
-        });
+        })
+    }
+
+    sendMessage() {
+        
+        if (this.state.roomId === null) {
+            this.requestRoom();
+        }
+        
+        sendMessage(
+            this.state, 
+            (response) => this.setState({response : response})
+        );
+        console.log(this.state.response)
     }
 
     render() {
         return (
             <div>
-                <label>{this.state.response}</label>
-                <label for={message}>ingrese su mensaje</label>
+                <label>{this.state.roomId}</label><br></br>
+                <label>{this.state.response}</label><br></br>
+                <label>ingrese su mensaje</label>
                 <input value={this.state.messageContent} onChange={evt => this.updateMessageContent(evt)}/>
-                <button onClick={this.requestState}>enviar</button>
+                <button onClick={this.sendMessage}>enviar</button>
            </div>
         );
     }
