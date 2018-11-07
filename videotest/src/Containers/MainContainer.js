@@ -41,10 +41,10 @@ class App extends Component {
 
     render() {
         return (
-            <div>
+            <div className="container">
                 <label>{this.state.roomId}</label><br></br>
                 <label>{this.state.response}</label><br></br>
-                <label>ingrese su mensaje</label>
+                <label>ingrese su mensaje</label><br></br>
                 <input value={this.state.messageContent} onChange={evt => this.updateMessageContent(evt)}/>
                 <button onClick={this.sendMessage}>enviar</button>
            </div>
