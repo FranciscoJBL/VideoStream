@@ -5,11 +5,15 @@ const socket = openSocket('http://localhost:3001');
 function leave(cb) {
 }
 
-function sendMessage(clientData, cb) {
-    socket.on( 'message', response => 
-        cb(response)
-    )
+function sendMessage(clientData) {
+    
     socket.emit('message', clientData)
+}
+
+function updateMessage(cb) {
+    socket.on( 'message', messageContent => {
+        cb(messageContent)
+    })
 }
 
 function find(clientData, cb) {
@@ -19,4 +23,4 @@ function find(clientData, cb) {
     socket.emit('find', clientData);
 }
 
-export {leave, sendMessage, find}
+export {leave, sendMessage, find, updateMessage}

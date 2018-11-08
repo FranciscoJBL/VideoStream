@@ -1,55 +1,90 @@
 import React, { Component } from 'react';
-import {find, sendMessage} from '../Api';
+import {find, sendMessage, updateMessage} from '../Api';
+import MessageLog from './MessageLog';
+import UserInput from './UserInput';
 
-class App extends Component {
+class MainContainer extends Component {
     constructor(props) {
         super(props);
         this.requestRoom = this.requestRoom.bind(this);
-        this.sendMessage = this.sendMessage.bind(this);
+        this.getOrigin = this.getOrigin.bind(this);
+        this.update = this.update.bind(this);
+        this.send = this.send.bind(this);
         this.state = {
             roomId : null,
-            messageContent : '',
-            response: null
+            clientId : null,
+            messages: []
         };
     }
 
     requestRoom(){
-        find(
-            this.state, 
-            (room) => this.setState({roomId : room})
-        );
+        if (this.state.roomId === null) {
+            find(
+                this.state, 
+                (data) => this.setState({
+                    roomId : data.room,
+                    clientId : data.clientId
+                })
+            );
+
+            updateMessage((message) => this.update(message));
+        }
+        
     }
 
-    updateMessageContent(evt) {
+    send(message) {
+        if (this.state.clientId === null) {
+            return
+        }
+
+        var data = {
+            'id' : this.state.messages.length + 1,
+            'roomId' : this.state.roomId,
+            'senderId': this.state.clientId,
+            'messageContent' : message.messageContent
+        };
+        
+        this.update(data);
+        sendMessage(data);
+    }
+
+    update(message) {
+        console.log(message);
+        var stepMessages = this.state.messages;
+        stepMessages.push(message);
+
         this.setState({
-            messageContent: evt.target.value
+            messages : stepMessages
         })
     }
 
-    sendMessage() {
-        
-        if (this.state.roomId === null) {
-            this.requestRoom();
+    getOrigin(senderId) {
+        if (this.state.clientId === null) {
+            return 'local'
         }
-        
-        sendMessage(
-            this.state, 
-            (response) => this.setState({response : response})
-        );
-        console.log(this.state.response)
+
+        if (senderId === this.state.clientId) {
+            return 'local'
+        } else {
+            return 'remote'
+        }
     }
 
     render() {
         return (
             <div className="container">
-                <label>{this.state.roomId}</label><br></br>
-                <label>{this.state.response}</label><br></br>
-                <label>ingrese su mensaje</label><br></br>
-                <input value={this.state.messageContent} onChange={evt => this.updateMessageContent(evt)}/>
-                <button onClick={this.sendMessage}>enviar</button>
+                <MessageLog 
+                    messages = {this.state.messages}
+                    getOrigin = {this.getOrigin}
+                />
+                <UserInput 
+                    send = {this.send}
+                    origin = {this.state.clientId}
+                />
+                <button onClick = {this.requestRoom}>Start</button> 
            </div>
         );
     }
 }
 
-export default App;
+export default MainContainer;
