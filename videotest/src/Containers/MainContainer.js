@@ -73,15 +73,17 @@ class MainContainer extends Component {
     render() {
         return (
             <div className="container">
-                <MessageLog 
-                    messages = {this.state.messages}
-                    getOrigin = {this.getOrigin}
-                />
-                <UserInput 
-                    send = {this.send}
-                    origin = {this.state.clientId}
-                />
-                <button onClick = {this.requestRoom}>Start</button> 
+                <div>
+                    <MessageLog
+                        messages = {this.state.messages}
+                        getOrigin = {this.getOrigin}
+                    />
+                    <UserInput 
+                        send = {this.send}
+                        origin = {this.state.clientId}
+                    /> 
+                </div>
+                <button onClick = {this.requestRoom}>Start</button>
            </div>
         );
     }

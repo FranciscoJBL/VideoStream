@@ -30,17 +30,20 @@ class UserInput extends Component {
     }
     render() {
         return (
-            <form
-                className="send-message-form"
-                onSubmit={this.handleSubmit}
-            >
-                <input
-                    onChange={this.updateMessageContent}
-                    value={this.state.messageContent}
-                    placeholder="Type your message and hit ENTER"
-                    type="text"
-                />
-            </form>
+            <div> 
+                <form
+                    className="form-inline send-message-form"
+                    onSubmit={this.handleSubmit}
+                >
+                    <input
+                        className="send-message-input"
+                        onChange={this.updateMessageContent}
+                        value={this.state.messageContent}
+                        placeholder="Send a message"
+                        type="text"
+                    />
+                </form>
+            </div>
         );
     }
 }
