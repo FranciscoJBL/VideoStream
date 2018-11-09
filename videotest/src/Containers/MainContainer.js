@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import {find, sendMessage, updateMessage} from '../Api';
+import {find, sendMessage, updateMessage, getSocket} from '../Api';
 import MessageLog from './MessageLog';
 import UserInput from './UserInput';
 import Header from './Header';
+import MediaContainer from './MediaContainer';
 
 class MainContainer extends Component {
     constructor(props) {
@@ -14,17 +15,23 @@ class MainContainer extends Component {
         this.state = {
             roomId : null,
             clientId : null,
+            userMedia: null,
             messages: []
         };
     }
 
-    requestRoom(){
+    requestRoom() {
         if (this.state.roomId === null) {
             find(
                 this.state, 
                 (data) => this.setState({
                     roomId : data.room,
-                    clientId : data.clientId
+                    clientId : data.clientId,
+                    userMedia: navigator.mediaDevices.getUserMedia({
+                            audio: true, video: true
+                        }).catch(e => 
+                            alert('getUserMedia() error: ' + e.name)
+                        )
                 })
             );
 
@@ -75,8 +82,11 @@ class MainContainer extends Component {
         return (
             <div>
                 <Header/>
-                <div>
-                </div>
+                <MediaContainer 
+                    media = {media => this.media = media} 
+                    socket = {getSocket()} 
+                    getUserMedia = {this.state.userMedia} 
+                />
                 <div className="container">
                     <div>
                         <MessageLog

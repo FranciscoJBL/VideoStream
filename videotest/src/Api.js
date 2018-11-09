@@ -2,6 +2,10 @@ import openSocket from 'socket.io-client';
 
 const socket = openSocket('http://localhost:3001');
 
+function getSocket() {
+    return socket;
+}
+
 function leave(cb) {
 }
 
@@ -23,4 +27,4 @@ function find(clientData, cb) {
     socket.emit('find', clientData);
 }
 
-export {leave, sendMessage, find, updateMessage}
+export {leave, sendMessage, find, updateMessage, getSocket}
