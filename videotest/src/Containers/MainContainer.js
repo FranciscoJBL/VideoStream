@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {find, sendMessage, updateMessage} from '../Api';
 import MessageLog from './MessageLog';
 import UserInput from './UserInput';
+import Header from './Header';
 
 class MainContainer extends Component {
     constructor(props) {
@@ -72,18 +73,25 @@ class MainContainer extends Component {
 
     render() {
         return (
-            <div className="container">
+            <div>
+                <Header/>
                 <div>
-                    <MessageLog
-                        messages = {this.state.messages}
-                        getOrigin = {this.getOrigin}
-                    />
-                    <UserInput 
-                        send = {this.send}
-                        origin = {this.state.clientId}
-                    /> 
                 </div>
-                <button onClick = {this.requestRoom}>Start</button>
+                <div className="container">
+                    <div>
+                        <MessageLog
+                            messages = {this.state.messages}
+                            getOrigin = {this.getOrigin}
+                        />
+                        <UserInput 
+                            send = {this.send}
+                            origin = {this.state.clientId}
+                        /> 
+                    </div>
+                    <button onClick = {this.requestRoom}>Start</button>
+                </div>
+                <div>
+                </div>
            </div>
         );
     }
