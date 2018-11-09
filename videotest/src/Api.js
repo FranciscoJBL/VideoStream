@@ -1,6 +1,6 @@
 import openSocket from 'socket.io-client';
 
-const socket = openSocket('http://localhost:3001');
+const socket = openSocket('http://18.225.5.108:3001/');
 
 function getSocket() {
     return socket;
