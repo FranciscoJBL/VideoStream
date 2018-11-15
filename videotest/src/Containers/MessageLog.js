@@ -10,7 +10,12 @@ class MessageLog extends Component {
     }
 
     scrollToBottom = () => {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+        if (this.messagesEnd !== undefined) {
+            this.messagesEnd.scrollTo(
+                0 , this.messagesEnd.scrollHeight
+            );
+        }
+        
     }
       
     componentDidMount() {
@@ -23,12 +28,14 @@ class MessageLog extends Component {
 
     render() {
         return (
-            <div className="message-container scrollbar scrollbar-night-fade">
-                <ul className="message-log">
+            <div className="message-container">
+                <ul className="message-log scrollbar scrollbar-night-fade"
+                ref={(el) => { this.messagesEnd = el; }}
+                >
                     {this.props.messages.map(message => {
                     return (
                         <li
-                            key = {message.id} 
+                            key = {message.id}
                             className = {"message "+ this.props.getOrigin(message.senderId)}
                         >
                             {message.messageContent}
@@ -36,10 +43,7 @@ class MessageLog extends Component {
                     )
                     })}
                 </ul>
-                <div style={{ float:"left", clear: "both", position : "absolute", bottom: 0}}
-                    ref={(el) => { this.messagesEnd = el; }}>
-                </div>
-            </div>            
+            </div>
         );
     }
 }
