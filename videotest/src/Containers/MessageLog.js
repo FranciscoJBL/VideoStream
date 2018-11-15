@@ -23,8 +23,8 @@ class MessageLog extends Component {
 
     render() {
         return (
-            <div>
-                <ul className="message-log scrollbar scrollbar-night-fade">
+            <div className="message-container scrollbar scrollbar-night-fade">
+                <ul className="message-log">
                     {this.props.messages.map(message => {
                     return (
                         <li
@@ -36,7 +36,7 @@ class MessageLog extends Component {
                     )
                     })}
                 </ul>
-                <div style={{ float:"left", clear: "both"}}
+                <div style={{ float:"left", clear: "both", position : "absolute", bottom: 0}}
                     ref={(el) => { this.messagesEnd = el; }}>
                 </div>
             </div>            
