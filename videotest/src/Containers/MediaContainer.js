@@ -176,5 +176,5 @@ MediaContainer.propTypes = {
     socket: PropTypes.object.isRequired,
     getUserMedia: PropTypes.object.isRequired,
     media: PropTypes.func.isRequired
-  }
+}
 export default MediaContainer;

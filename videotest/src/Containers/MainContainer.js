@@ -20,6 +20,16 @@ class MainContainer extends Component {
         };
     }
 
+    onComponentWillMount() {
+        this.setState({
+            userMedia: navigator.mediaDevices.getUserMedia({
+                audio: true, video: true
+            }).catch(e => 
+                alert('getUserMedia() error: ' + e.name)
+            )
+        });
+    }
+
     requestRoom() {
         if (this.state.roomId === null) {
             find(
@@ -28,10 +38,10 @@ class MainContainer extends Component {
                     roomId : data.room,
                     clientId : data.clientId,
                     userMedia: navigator.mediaDevices.getUserMedia({
-                            audio: true, video: true
-                        }).catch(e => 
-                            alert('getUserMedia() error: ' + e.name)
-                        )
+                        audio: true, video: true
+                    }).catch(e => 
+                        alert('getUserMedia() error: ' + e.name)
+                    )
                 })
             );
 
@@ -83,8 +93,8 @@ class MainContainer extends Component {
             <div>
                 <Header/>
                 <MediaContainer 
-                    media = {media => this.media = media} 
                     socket = {getSocket()} 
+                    media = {media => this.media = media}
                     getUserMedia = {this.state.userMedia} 
                 />
                 <div className="container">

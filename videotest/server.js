@@ -1,5 +1,15 @@
 const io = require('socket.io')();
 console.log('server started')
+const https = require('https');
+const fs = require('fs');
+
+const appOptions = { 
+    key: fs.readFileSync(__dirname + '/rtc-video-room-key.pem'),
+    cert: fs.readFileSync(__dirname + '/rtc-video-room-cert.pem')
+};
+
+let app = https.createServer(appOptions);
+
 let availableRooms = [];
 
 io.on('connection', (client) => {
@@ -36,7 +46,6 @@ io.on('connection', (client) => {
     });
 });
 
-
 function requestRoom(clientData) {
     if (clientData.type !== 'x') {
         var room;
@@ -63,5 +72,4 @@ function requestRoom(clientData) {
     }
 }
 
-const port = 3001;
-io.listen(port);
+app.listen(3001);
