@@ -3,7 +3,7 @@ console.log('server started')
 const https = require('https');
 const fs = require('fs');
 
-const appOptions = { 
+const appOptions = {
     key: fs.readFileSync(__dirname + '/rtc-video-room-key.pem'),
     cert: fs.readFileSync(__dirname + '/rtc-video-room-cert.pem')
 };
@@ -29,8 +29,8 @@ io.on('connection', (client) => {
         console.log('A user as send a message to room '+clientData.roomId+' with text '+clientData.messageContent);
         client.to(clientData.roomId).emit('message', messageContent);
     });
-        
-    
+
+
 
     client.on('leave', clientData => {
         client.leave(clientData.roomId)
@@ -49,7 +49,7 @@ io.on('connection', (client) => {
 function requestRoom(clientData) {
     if (clientData.type !== 'x') {
         var room;
-        var clientId 
+        var clientId
         if (availableRooms.length > 0) {
             room = availableRooms.pop();
             clientId = Math.floor(Math.random() * (10000000 - 1000000) + 1000000);

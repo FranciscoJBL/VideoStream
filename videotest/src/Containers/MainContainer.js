@@ -3,6 +3,8 @@ import {find, sendMessage, updateMessage} from '../Api';
 import MessageLog from './MessageLog';
 import UserInput from './UserInput';
 import Header from './Header';
+import peer from 'peerjs';
+import MediaContainer from './MediaContainer';
 
 class MainContainer extends Component {
     constructor(props) {
@@ -11,43 +13,64 @@ class MainContainer extends Component {
         this.getOrigin = this.getOrigin.bind(this);
         this.update = this.update.bind(this);
         this.send = this.send.bind(this);
+        this.stablishPeerMediaStream = this.stablishPeerMediaStream.bind(this);
+        this.callMediaStream = this.callMediaStream.bind(this);
         this.state = {
             roomId : null,
             clientId : null,
             userMedia: null,
+            remoteVideo: null,
+            localVideo: null,
+            socket : null,
             messages: []
         };
     }
 
-    /*
-    onComponentWillMount() {
-        this.setState({
-            userMedia: navigator.mediaDevices.getUserMedia({
-                audio: true, video: true
-            }).catch(e => 
-                alert('getUserMedia() error: ' + e.name)
-            )
-        });
-    }
-    */
     requestRoom() {
         if (this.state.roomId === null) {
             find(
-                this.state, 
+                this.state,
                 (data) => this.setState({
                     roomId : data.room,
                     clientId : data.clientId,
-                    userMedia: navigator.mediaDevices.getUserMedia({
-                        audio: true, video: true
-                    }).catch(e => 
-                        alert('getUserMedia() error: ' + e.name)
-                    )
-                })
+                    userMedia: navigator.mediaDevices.getUserMedia
+                },
+                this.stablishPeerMediaStream()
+                )
             );
 
             updateMessage((message) => this.update(message));
         }
-        
+
+    }
+
+    stablishPeerMediaStream() {
+        var peerConnection = new peer(
+            this.state.clientId, {
+                host: 'localhost',
+                port: 3001,
+                path: '/'
+            }
+        );
+        this.setState({
+            socket : peerConnection
+        }, this.callMediaStream());
+    }
+
+    callMediaStream() {
+        this.state.userMedia({video: true, audio: true}, function(stream) {
+            var call = peer.call('another-peers-id', stream);
+            this.setState({
+                'localVideo' : stream
+            })
+            call.on('stream', function(remoteStream) {
+                this.setState({
+                    'remoteVideo' : remoteStream
+                })
+            });
+        }).catch(e =>
+            alert('getUserMedia() error: ' + e.name)
+        )
     }
 
     send(message) {
@@ -61,7 +84,7 @@ class MainContainer extends Component {
             'senderId': this.state.clientId,
             'messageContent' : message.messageContent
         };
-        
+
         this.update(data);
         sendMessage(data);
     }
@@ -92,16 +115,24 @@ class MainContainer extends Component {
         return (
             <div>
                 <Header/>
-                <div className="container">
-                    <div>
-                        <MessageLog
-                            messages = {this.state.messages}
-                            getOrigin = {this.getOrigin}
-                        />
-                        <UserInput 
-                            send = {this.send}
-                            origin = {this.state.clientId}
-                        /> 
+                <div className = "container">
+                    <div className = "row">
+                        <div className="col-md-4 col-sm-4 col-4">
+                            <MediaContainer
+                                remoteMedia = {this.state.remoteVideo}
+                                localVideo = {this.state.localVideo}
+                            />
+                        </div>
+                        <div className="col-md-8 col-sm-8 col-8">
+                            <MessageLog
+                                messages = {this.state.messages}
+                                getOrigin = {this.getOrigin}
+                            />
+                            <UserInput
+                                send = {this.send}
+                                origin = {this.state.clientId}
+                            />
+                        </div>
                     </div>
                     <button onClick = {this.requestRoom}>Start</button>
                 </div>

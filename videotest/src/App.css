@@ -2,6 +2,9 @@
   text-align: center;
 }
 
+div {
+    margin: 0;
+}
 .message-container {
     padding: 0 0 0 6px;
     margin: 0;
@@ -20,7 +23,6 @@
 .message-log {
     overflow-y: scroll;
     max-height: 500px;
-    width: 98%;
     margin:0;
     position: absolute;
     bottom: 0;
@@ -40,12 +42,16 @@ li {
     border-radius: 5px;
 }
 
-.media-bridge,
+.media-bridge {
+    margin-top: 10%;
+    height: 100%;
+}
+
 .local-video,
 .remote-video {
-    position: absolute;
-    height: 100%;
-    width: 100%;
+    margin-top: 5%;
+    box-sizing: border-box;
+    background-color: black;
 }
 
 .local {
@@ -53,7 +59,7 @@ li {
     float: right;
     background-color: burlywood;
 }
- 
+
 .remote {
     margin-right: 50%;
     float:left;
@@ -84,12 +90,12 @@ li {
 -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
 box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
 background-color: #F5F5F5;
-border-radius: 10px; 
+border-radius: 10px;
 }
 
 .scrollbar-juicy-peach::-webkit-scrollbar {
 width: 12px;
-background-color: #F5F5F5; 
+background-color: #F5F5F5;
 }
 
 .scrollbar-juicy-peach::-webkit-scrollbar-thumb {
@@ -98,7 +104,7 @@ border-radius: 10px;
 box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
 background-image: -webkit-gradient(linear, left top, right top, from(#ffecd2), to(#fcb69f));
 background-image: -webkit-linear-gradient(left, #ffecd2 0%, #fcb69f 100%);
-background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%); 
+background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
 }
 
 .scrollbar-young-passion::-webkit-scrollbar-track {

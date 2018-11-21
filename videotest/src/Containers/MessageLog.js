@@ -15,7 +15,6 @@ class MessageLog extends Component {
                 0 , this.messagesEnd.scrollHeight
             );
         }
-        
     }
       
     componentDidMount() {
